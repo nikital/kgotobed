@@ -71,6 +71,7 @@ static int __init kgotobed_init_module(void)
         goto fail_thread;
     }
 
+    __module_get(THIS_MODULE);
     return 0;
 
 fail_thread:

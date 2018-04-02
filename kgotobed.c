@@ -13,7 +13,9 @@ static bool armed;
 static int kgotobed(void *unused)
 {
     while (!kthread_should_stop()) {
-        pr_info("kgotobed: %lld\n", ktime_get_boottime());
+        if (armed && ktime_after(ktime_get_boottime(), bed_time)) {
+            pr_err("kgotobed: Time to go bed!\n");
+        }
         ssleep(1);
     }
     return 0;

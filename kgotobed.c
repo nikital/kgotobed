@@ -1,6 +1,7 @@
 #include <linux/delay.h>
-#include <linux/module.h>
 #include <linux/kthread.h>
+#include <linux/module.h>
+#include <linux/reboot.h>
 #include <linux/timekeeping.h>
 
 MODULE_AUTHOR("Nikita Leshenko <nikita@leshenko.net>");
@@ -15,6 +16,7 @@ static int kgotobed(void *unused)
     while (!kthread_should_stop()) {
         if (armed && ktime_after(ktime_get_boottime(), bed_time)) {
             pr_err("kgotobed: Time to go bed!\n");
+            kernel_power_off();
         }
         ssleep(1);
     }

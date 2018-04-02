@@ -1,5 +1,6 @@
 *.ko
 *.o
+*.o.d
 .tmp_versions/
 *.cmd
 Module.symvers

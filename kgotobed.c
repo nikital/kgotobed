@@ -30,8 +30,7 @@ static ssize_t seconds_to_bed_show(struct kobject *kobj,
     ktime_t time_to_bed;
 
     if (!armed) {
-        buf[0] = '\0';
-        return 1;
+        return 0;
     }
 
     time_to_bed = ktime_sub(bed_time, ktime_get_boottime());

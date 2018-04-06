@@ -1,6 +1,63 @@
-* Building
+* Introduction
+  =kgotobed= is for the night owls out there. Night owls feel most creative and
+  energetic late at night, which makes it hard for some to break the flow and go
+  to bed. If I'm working on something exciting I will find myself going to sleep
+  very late and then feeling shitty and sleep deprived on the following day.
 
-  Install =kernel-devel-$(uname -r)=
+  I still *want* to go to sleep at a reasonable time. I tried different methods,
+  from alarm clocks as reminders to cron jobs that will shut down the computer.
+  They weren't effective in the long term because they are just too easy to
+  ignore: Snooze that alarm! Kill that =crond=! I need 10 more minutes! Come on,
+  I'm at my peak now, I don't want to stop! Oh, it's 3 AM again?
+
+  I need something that I can't ignore. I need something that I can't disable
+  even with root access. Let's make a kernel driver!
+
+* Usage
+  On boot, =kgotobed.service= loads =kgotobed.ko= and sets bedtime to 1:00 AM.
+  From this point forward, the computer will shut down at 1:00 AM no matter
+  what. If you want a different time, customize =kgotobed.service= (by editing
+  it or by using systemd drop-in)
+
+  To view the current bedtime, run =gotobed=.
+
+  To move bedtime earlier, for example 23:00, run =gotobed 23:00=. This is
+  useful if you want to sleep earlier this day for some reason.
+
+  No, you can't move the bedtime later. No, you can't unload the kernel module.
+  No, adjusting the system clock won't help. The only way out is a reboot (or
+  patching through =/dev/mem=), which will hopefully break the flow and force
+  you to sleep.
+
+  If you find an effective way to circumvent this, please share :)
+
+* Install
+  Install dependencies required to build the kernel module:
+
+  On Fedora:
+  #+BEGIN_SRC sh
+    dnf install kernel-devel-$(uname -r) dkms
+  #+END_SRC
+
+  On Ubuntu:
+  #+BEGIN_SRC sh
+    apt install dkms
+  #+END_SRC
+
+  After you have the dependencies:
+  #+BEGIN_SRC sh
+    # To install
+    make install
+
+    # To uninstall
+    make uninstall
+  #+END_SRC
+
+  The installation command will:
+   - Register =kgotobed.ko= with DKMS (so that it will be rebuilt for every
+     kernel you run)
+   - Install =gotobed= utility in =/usr/local/bin=
+   - Register, enable and start the systemd service =kgotobed.service=
 
 * License
   GPLv3. See COPYING for the full text.

@@ -65,8 +65,9 @@ def main ():
     current_bedtime = get_current_bedtime ()
 
     if current_bedtime:
-        print ('Current bedtime is {}'.format (
-            current_bedtime.replace (second=0, microsecond=0)))
+        rounded_bedtime = current_bedtime + timedelta (seconds=30)
+        rounded_bedtime = rounded_bedtime.replace (second=0, microsecond=0)
+        print ('Current bedtime is {}'.format (rounded_bedtime))
     else:
         print ('Currently no bedtime is set')
 

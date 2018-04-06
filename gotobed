@@ -21,8 +21,11 @@ def time (arg):
 def parse_args ():
     parser = argparse.ArgumentParser ()
     parser.add_argument ('time', metavar='hh[:mm]',
-                         help='Time to go to bed',
-                         type=time)
+                         type=time,
+                         help='Time to go to bed')
+    parser.add_argument ('-f', '--force',
+                         action='store_true',
+                         help="Don't confirm time adjustment")
     return parser.parse_args ()
 
 def main ():

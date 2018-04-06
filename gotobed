@@ -61,7 +61,6 @@ def set_bedtime (time):
 def main ():
     args = parse_args ()
 
-    delta = args.time - NOW
 
     current_bedtime = get_current_bedtime ()
     if current_bedtime and not args.force:
@@ -73,7 +72,7 @@ def main ():
                                 " work like this...")
 
     print ('Setting bedtime to {}'.format (args.time))
-    hours, minutes = divmod (delta, timedelta (hours=1))
+    hours, minutes = divmod (args.time - NOW, timedelta (hours=1))
     minutes //= timedelta (minutes=1)
     print ('Bedtime will be in {:d} hours {:02d} minutes'.format(hours, minutes))
 

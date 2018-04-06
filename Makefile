@@ -1,13 +1,6 @@
-ifneq ($(KERNELRELEASE),)
-# kbuild part of makefile
-obj-m  := kgotobed.o
-
-else
-# normal makefile
+.PHONY: modules clean
 KDIR ?= /lib/modules/`uname -r`/build
 modules:
-	$(MAKE) -C $(KDIR) M=$$PWD modules
+	$(MAKE) -C $(KDIR) M=$$PWD/module modules
 clean:
-	$(MAKE) -C $(KDIR) M=$$PWD clean
-
-endif
+	$(MAKE) -C $(KDIR) M=$$PWD/module clean

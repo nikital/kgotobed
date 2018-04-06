@@ -4,8 +4,8 @@ After=dkms.service
 
 [Service]
 Type=oneshot
-ExecStartPre=/usr/sbin/modprobe kgotobed
-Environment=TIME='01:00'
+ExecStartPre=/sbin/modprobe kgotobed
+Environment=TIME=01:00
 ExecStart=/usr/local/bin/gotobed -f ${TIME}
 
 [Install]

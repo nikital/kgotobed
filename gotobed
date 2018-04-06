@@ -78,8 +78,15 @@ def main ():
     print ('Bedtime will be in {:d} hours {:02d} minutes'.format(hours, minutes))
 
     if not args.force:
-        if input ('Confirm? [Y/n] ').lower () not in ('', 'y', 'yes'):
-            raise GotoBedError ('Not confirmed')
+        try:
+            if input ('Confirm? [Y/n] ').lower () not in ('', 'y', 'yes'):
+                raise GotoBedError ('Not confirmed')
+        except KeyboardInterrupt:
+            print ('')
+            exit (1)
+        except EOFError:
+            print ('')
+            exit (1)
 
     set_bedtime (args.time)
 

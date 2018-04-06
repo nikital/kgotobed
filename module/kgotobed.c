@@ -1,3 +1,6 @@
+/* Copyright (c) 2018, Nikita Leshenko <nikita@leshenko.net> */
+/* License: GPLv3 */
+
 #include <linux/delay.h>
 #include <linux/kthread.h>
 #include <linux/module.h>

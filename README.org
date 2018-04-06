@@ -1,3 +1,6 @@
 * Building
 
   Install =kernel-devel-$(uname -r)=
+
+* License
+  GPLv3. See COPYING for the full text.

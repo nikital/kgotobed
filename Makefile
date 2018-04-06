@@ -6,6 +6,7 @@ clean:
 	$(MAKE) -C $(KDIR) M=$$PWD/module clean
 
 install:
+	-dkms remove kgotobed/1.0 --all
 	dkms install module
 	cp gotobed /usr/local/bin
 	cp kgotobed.service /etc/systemd/system

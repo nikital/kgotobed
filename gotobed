@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+
+import argparse
+from datetime import datetime, timedelta
+
+def time (arg):
+    arg = arg.split (':', maxsplit=1)
+    hour = int (arg[0])
+    minute = int (arg[1]) if len (arg) > 1 else 0
+    if hour == 24:
+        hour = 0
+
+    now = datetime.now ()
+    time = now.replace (hour=hour, minute=minute, second=0, microsecond=0)
+    if time < now:
+        # Time refers to tomorrow
+        time += timedelta (days=1)
+
+    return time
+
+def parse_args ():
+    parser = argparse.ArgumentParser ()
+    parser.add_argument ('time', metavar='hh[:mm]',
+                         help='Time to go to bed',
+                         type=time)
+    return parser.parse_args ()
+
+def main ():
+    args = parse_args ()
+    print (args.time)
+
+if __name__ == '__main__':
+    main ()

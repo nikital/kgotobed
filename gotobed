@@ -24,8 +24,8 @@ def time (arg):
 def parse_args ():
     parser = argparse.ArgumentParser ()
     parser.add_argument ('time', metavar='hh[:mm]',
-                         type=time,
-                         help='Time to go to bed')
+                         nargs='?', type=time,
+                         help='Set time to go to bed')
     parser.add_argument ('-f', '--force',
                          action='store_true',
                          help="Don't confirm time adjustment")
@@ -63,6 +63,16 @@ def main ():
 
 
     current_bedtime = get_current_bedtime ()
+
+    if current_bedtime:
+        print ('Current bedtime is {}'.format (
+            current_bedtime.replace (second=0, microsecond=0)))
+    else:
+        print ('Currently no bedtime is set')
+
+    if args.time is None:
+        return
+
     if current_bedtime and not args.force:
         if current_bedtime < NOW:
             print ('Warning: Past bedtime. The driver should have already'

@@ -2,6 +2,10 @@
 
 import argparse
 from datetime import datetime, timedelta
+NOW = datetime.now ()
+
+class GotoBedError (Exception):
+    pass
 
 def time (arg):
     arg = arg.split (':', maxsplit=1)
@@ -10,9 +14,8 @@ def time (arg):
     if hour == 24:
         hour = 0
 
-    now = datetime.now ()
-    time = now.replace (hour=hour, minute=minute, second=0, microsecond=0)
-    if time < now:
+    time = NOW.replace (hour=hour, minute=minute, second=0, microsecond=0)
+    if time < NOW:
         # Time refers to tomorrow
         time += timedelta (days=1)
 
@@ -28,9 +31,61 @@ def parse_args ():
                          help="Don't confirm time adjustment")
     return parser.parse_args ()
 
+def get_current_bedtime ():
+    try:
+        with open ('/sys/kernel/seconds_to_bed') as f:
+            seconds = f.read ()
+    except FileNotFoundError:
+        raise GotoBedError ('Failed to open driver file. Is kgotobed loaded?')
+    except PermissionError:
+        raise GotoBedError ('Permission error while reading from driver')
+
+    if not seconds:
+        return None
+
+    return NOW + timedelta(seconds=int(seconds))
+
+def set_bedtime (time):
+    # take datetime.now again instead of using NOW because time might have
+    # passed while we waited for user confirmation
+    seconds = (time - datetime.now ()).total_seconds ()
+    seconds = int (seconds)
+    try:
+        with open ('/sys/kernel/seconds_to_bed', 'w') as f:
+            f.write (str (seconds))
+    except FileNotFoundError:
+        raise GotoBedError ('Failed to open driver file. Is kgotobed loaded?')
+    except PermissionError:
+        raise GotoBedError ('Permission error while writing to driver')
+
 def main ():
     args = parse_args ()
-    print (args.time)
+
+    delta = args.time - NOW
+
+    current_bedtime = get_current_bedtime ()
+    if current_bedtime and not args.force:
+        if current_bedtime < NOW:
+            print ('Warning: Past bedtime. The driver should have already'
+                ' killed the computer. Strange bug...')
+        if args.time > current_bedtime:
+            raise GotoBedError ("Attempting to postpone bed time, it doesn't"
+                                " work like this...")
+
+    print ('Setting bedtime to {}'.format (args.time))
+    hours, minutes = divmod (delta, timedelta (hours=1))
+    minutes //= timedelta (minutes=1)
+    print ('Bedtime will be in {:d} hours {:02d} minutes'.format(hours, minutes))
+
+    if not args.force:
+        if input ('Confirm? [Y/n] ').lower () not in ('', 'y', 'yes'):
+            raise GotoBedError ('Not confirmed')
+
+    set_bedtime (args.time)
 
 if __name__ == '__main__':
-    main ()
+    try:
+        main ()
+    except GotoBedError as e:
+        print ('Error:', e)
+        exit (1)

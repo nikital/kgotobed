@@ -60,4 +60,4 @@
    - Register, enable and start the systemd service =kgotobed.service=
 
 * License
-  GPLv3. See COPYING for the full text.
+  GPLv2. See COPYING for the full text.

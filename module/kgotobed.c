@@ -1,5 +1,5 @@
 /* Copyright (c) 2018, Nikita Leshenko <nikita@leshenko.net> */
-/* License: GPLv3 */
+/* SPDX-License-Identifier: GPL-2.0 */
 
 #include <linux/delay.h>
 #include <linux/kthread.h>
